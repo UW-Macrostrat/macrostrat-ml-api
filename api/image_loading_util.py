@@ -40,4 +40,4 @@ def get_image_from_id(image_id: int) -> Image.Image:
         return Image.open(io.BytesIO(image_data))
     except Exception as e:
         print(f"Error retrieving image {image_id}: {e}")
-        return None
+        return Image.new('RGB', (100, 100), color='white')  # Return a blank image if not found

@@ -1,6 +1,6 @@
-from image_relevance import get_image_relevance_score
 from schemas import Checkin
 from fastapi import FastAPI
+from image_relevance import get_image_relevance_score
 from text_relevance import get_relevance_score
 from text_appropriate import get_text_appropriateness
 from image_appropriate import get_image_appropriateness
@@ -36,5 +36,5 @@ def get_checkin_report(checkin: Checkin):
             "image_appropriateness": image_appropriateness_score,
             }
 
-# if __name__ == '__main__':
-#     uvicorn.run(app, host='127.0.0.1', port=8000)
+if __name__ == '__main__':
+    uvicorn.run(app, host='127.0.0.1', port=8000)

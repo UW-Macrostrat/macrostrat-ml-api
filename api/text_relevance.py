@@ -1,15 +1,10 @@
 from setfit import SetFitModel
-from huggingface_hub import login, logout
-from dotenv import load_dotenv
 import os
 
 from model_loading_util import download_model_from_folder
 
-load_dotenv()
 
 try:
-    token = os.environ["HF_TOKEN"]
-    login(token)
     model = SetFitModel.from_pretrained("FriedGil/rockd-image-relevance-classification")
 
 except Exception as e:

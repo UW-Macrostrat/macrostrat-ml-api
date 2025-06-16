@@ -25,25 +25,31 @@ s3 = boto3.client(
 )
 
 def download_model_from_folder(bucket, prefix, local_dir):
-    paginator = s3.get_paginator("list_objects_v2")
-    for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
-        if "Contents" not in page:
-            print("No objects found with that prefix.")
-            return
-        for obj in page["Contents"]:
-            key = obj["Key"]
-            rel_path = os.path.relpath(key, prefix)
-            local_file_path = os.path.join(local_dir, rel_path)
+    try:
+        paginator = s3.get_paginator("list_objects_v2")
+        for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
+            if "Contents" not in page:
+                print("No objects found with that prefix.")
+                return
+            for obj in page["Contents"]:
+                key = obj["Key"]
+                rel_path = os.path.relpath(key, prefix)
+                local_file_path = os.path.join(local_dir, rel_path)
 
-            if key.endswith("/"):  #Ensure folder exists
-                os.makedirs(local_file_path, exist_ok=True)
-                continue
+                if key.endswith("/"):  #Ensure folder exists
+                    os.makedirs(local_file_path, exist_ok=True)
+                    continue
 
-            os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
-            print(f"Downloading s3://{bucket}/{key} to {local_file_path}")
-            s3.download_file(bucket, key, local_file_path)
+                os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+                print(f"Downloading s3://{bucket}/{key} to {local_file_path}")
+                s3.download_file(bucket, key, local_file_path)
+    except Exception as e:
+        print(f"Error downloading model from folder: {e}")
 
 def download_model_from_file(bucket, key, local_file_path):
-    os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
-    print(f"Downloading s3://{bucket}/{key} to {local_file_path}")
-    s3.download_file(bucket, key, local_file_path)
+    try:
+        os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+        print(f"Downloading s3://{bucket}/{key} to {local_file_path}")
+        s3.download_file(bucket, key, local_file_path)
+    except Exception as e:
+        print(f"Error downloading model from file: {e}")
