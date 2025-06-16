@@ -1,8 +1,10 @@
-from api.schemas import Checkin
+from image_relevance import get_image_relevance_score
+from schemas import Checkin
 from fastapi import FastAPI
-from api.text_relevance import get_relevance_score
-from api.text_appropriate import get_text_appropriateness
-from api.image_appropriate import get_image_appropriateness
+from text_relevance import get_relevance_score
+from text_appropriate import get_text_appropriateness
+from image_appropriate import get_image_appropriateness
+import uvicorn
 
 app = FastAPI(title="RockD Data Screening API")
 
@@ -22,13 +24,16 @@ def get_checkin_report(checkin: Checkin):
     Returns:
         dict: A dictionary containing the checkin ID and its relevance score.
     """
-    relevance_score = get_relevance_score(checkin.notes)
-    approp_text_score = get_text_appropriateness(checkin.notes)
+    text_relevance_score = get_relevance_score(checkin.notes)
+    image_relevance_score = get_image_relevance_score(checkin.checkin_id)
+    text_appropriateness_score = get_text_appropriateness(checkin.notes)
+    image_appropriateness_score = get_image_appropriateness(checkin.checkin_id)
 
-    image_appropriateness = checkin.photo is not None  # Placeholder for image appropriateness che
     return {"checkin_id": checkin.checkin_id, 
-            "relevance_score": relevance_score,
-            "text_appropriateness": approp_text_score,
+            "text_relevanve": text_relevance_score,
+            "image_relevance": image_relevance_score,
+            "text_appropriateness": text_appropriateness_score,
+            "image_appropriateness": image_appropriateness_score,
             }
 
 # if __name__ == '__main__':

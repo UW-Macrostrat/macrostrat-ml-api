@@ -3,11 +3,20 @@ from huggingface_hub import login, logout
 from dotenv import load_dotenv
 import os
 
+from model_loading_util import download_model_from_folder
+
 load_dotenv()
 
-token = os.environ["HF_TOKEN"]
-login(token)
-model = SetFitModel.from_pretrained("FriedGil/rockd-image-relevance-classification")
+try:
+    token = os.environ["HF_TOKEN"]
+    login(token)
+    model = SetFitModel.from_pretrained("FriedGil/rockd-image-relevance-classification")
+
+except Exception as e:
+    download_model_from_folder("ml-model-data", "rockd-text-relevance-model/", "./rockd-text-relevance-model-download")
+    model = SetFitModel.from_pretrained("./rockd-text-relevance-model-download")
+
+
 
 
 def get_relevance_score(text: str) -> float:

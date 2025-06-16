@@ -1,11 +1,14 @@
 from PIL import Image
 from transformers.pipelines import pipeline
 
+from image_loading_util import get_image_from_id
+
+
 classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detection")
 
 
 
-def get_image_appropriateness(image_path: str) -> int:
+def get_image_appropriateness(image_id: int) -> float:
     '''
     Classify the appropriateness of an image using a pretrained NSFW model.
     Args:
@@ -13,9 +16,9 @@ def get_image_appropriateness(image_path: str) -> int:
     Returns:
         float: Appropriateness score (0-1), where 0 is inappropriate and 1 is appropriate.
     '''
-    img = Image.open(image_path)
+    image = get_image_from_id(image_id)
     classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detection")
-    result = classifier(img)
+    result = classifier(image)
     top_score = max(result, key=lambda x: x['score']) # type: ignore #Should be valid
     if top_score['label'] == 'nsfw':
         return 1 - top_score['score']
