@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class Checkin(BaseModel):
     checkin_id: int
     notes: str
-    person_id: Optional[int] = None
+    person_id: int
     rating: Optional[int] = None
     st_astext: Optional[str] = None
     photo: Optional[int] = None

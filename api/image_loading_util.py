@@ -1,43 +1,19 @@
+import requests
 from PIL import Image
-import os
-import io
-from dotenv import load_dotenv
-import boto3
-from botocore.client import Config
+from io import BytesIO
 
-load_dotenv()
-
-base_url = "https://storage.macrostrat.org"
-access_key = os.environ["PHOTOS_S3_ACCESS_KEY"]
-secret_key = os.environ["PHOTOS_S3_SECRET_KEY"]
-
-def get_image_from_id(image_id: int) -> Image.Image:
+def get_image_from_id(checkin_id: int, person_id: int):
     """
-    Get the image URL from the image ID. 
-    This has to search through the entire S3 bucket to find the image, so ideally this can be changed.
-    
-    Args:
-        image_id (str): The ID of the image.
-        
-    Returns:
-        Image: A PIL Image object of the image.
+    Retrieve an image based on the person ID and image ID.
     """
-    s3 = boto3.client(
-        "s3",
-        aws_access_key_id=access_key,
-        aws_secret_access_key=secret_key,
-        endpoint_url=base_url,
-        config=Config(signature_version="s3v4"),
-        region_name="us-east-1",
-    )
-
-    bucket_name = "rockd-photos"
-    key = f"original/{image_id}.jpg"
-
+    url = f"https://dev.rockd.org/api/protected/image/{person_id}/thumb_large/{checkin_id}"
     try:
-        response = s3.get_object(Bucket=bucket_name, Key=key)
-        image_data = response['Body'].read()
-        return Image.open(io.BytesIO(image_data))
-    except Exception as e:
-        print(f"Error retrieving image {image_id}: {e}")
-        return Image.new('RGB', (100, 100), color='white')  # Return a blank image if not found
+        response = requests.get(url)
+        response.raise_for_status()
+        return Image.open(BytesIO(response.content))
+    except requests.RequestException as e:
+        print(f"Error fetching image: {e}")
+        return Image.new('RGB', (100, 100), color='white')
+    except IOError as e:
+        print(f"Error opening image: {e}")
+        return Image.new('RGB', (100, 100), color='white')  # Return a blank image on error

@@ -8,7 +8,7 @@ classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detect
 
 
 
-def get_image_appropriateness(image_id: int) -> float:
+def get_image_appropriateness(checkin_id: int, person_id: int) -> float:
     '''
     Classify the appropriateness of an image using a pretrained NSFW model.
     Args:
@@ -16,7 +16,7 @@ def get_image_appropriateness(image_id: int) -> float:
     Returns:
         float: Appropriateness score (0-1), where 0 is inappropriate and 1 is appropriate.
     '''
-    image = get_image_from_id(image_id)
+    image = get_image_from_id(checkin_id, person_id)
     classifier = pipeline("image-classification", model="Falconsai/nsfw_image_detection")
     result = classifier(image)
     top_score = max(result, key=lambda x: x['score']) # type: ignore #Should be valid

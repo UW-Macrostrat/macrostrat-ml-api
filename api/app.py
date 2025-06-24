@@ -25,9 +25,9 @@ def get_checkin_report(checkin: Checkin):
         dict: A dictionary containing the checkin ID and its relevance score.
     """
     text_relevance_score = get_relevance_score(checkin.notes)
-    image_relevance_score = get_image_relevance_score(checkin.checkin_id)
+    image_relevance_score = get_image_relevance_score(checkin.checkin_id, checkin.person_id)
     text_appropriateness_score = get_text_appropriateness(checkin.notes)
-    image_appropriateness_score = get_image_appropriateness(checkin.checkin_id)
+    image_appropriateness_score = get_image_appropriateness(checkin.checkin_id, checkin.person_id)
 
     return {"checkin_id": checkin.checkin_id, 
             "text_relevanve": text_relevance_score,
