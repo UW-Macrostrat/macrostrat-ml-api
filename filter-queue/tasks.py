@@ -47,7 +47,7 @@ def generate_checkin_report(checkin: Checkin):
 def publish_feedback(report_job_id: str):
     job = Job.fetch(report_job_id, connection=redis_conn)
     job.refresh()  # In case job has just finished
-    report: Checkin = job.result
+    report = job.result
     #Append to File (or create if it doesnt exist)
     if report is None:
         raise ValueError(f"Report job {report_job_id} has no result yet.")
