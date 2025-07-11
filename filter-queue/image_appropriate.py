@@ -1,4 +1,3 @@
-from PIL import Image
 from transformers.pipelines import pipeline
 
 from image_loading_util import get_image_from_id

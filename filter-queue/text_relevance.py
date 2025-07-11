@@ -1,17 +1,6 @@
 from setfit import SetFitModel
-import os
 
-from model_loading_util import download_model_from_folder
-
-
-try:
-    model = SetFitModel.from_pretrained("FriedGil/rockd-image-relevance-classification")
-
-except Exception as e:
-    download_model_from_folder("ml-model-data", "rockd-text-relevance-model/", "./rockd-text-relevance-model-download")
-    model = SetFitModel.from_pretrained("./rockd-text-relevance-model-download")
-
-
+model = SetFitModel.from_pretrained("FriedGil/rockd-image-relevance-classification")
 
 
 def get_relevance_score(text: str) -> float:
