@@ -19,8 +19,8 @@ def generate_checkin_report(checkin: Checkin):
         image_relevance_score = get_image_relevance_score(checkin.photo_id, checkin.person_id)
         text_appropriateness_score = get_text_appropriateness(checkin.notes)
         image_appropriateness_score = get_image_appropriateness(checkin.photo_id, checkin.person_id)
-        #Threshold is 0.5 for each. 9 is good, 10 is flagged for text relevance, 11 for image relevance, 12 for text appropriateness, and 13 for image appropriateness.
-        status_code = 9
+        #Threshold is 0.5 for each. 1 is good, 10 is flagged for text relevance, 11 for image relevance, 12 for text appropriateness, and 13 for image appropriateness.
+        status_code = 1
         if text_relevance_score < 0.5:
             status_code = 10
         elif image_relevance_score < 0.5:
